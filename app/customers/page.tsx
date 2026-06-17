@@ -17,7 +17,7 @@ export default function CustomersPage() {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Customer | null>(null);
   const [adding, setAdding] = useState(false);
-  const [form, setForm] = useState({ name: "", phone: "", email: "", area: "", preferredEmployee: "", notes: "", petName: "", petBreed: "", hairType: "", membershipStatus: "", vehicleMake: "", vehicleModel: "", mileage: "" });
+  const [form, setForm] = useState({ name: "", phone: "", email: "", area: "", preferredEmployee: "", notes: "", hairType: "", colorTreated: "", petName: "", petBreed: "", petSize: "", petAge: "", membershipStatus: "", pressurePreference: "", vehicleMake: "", vehicleModel: "", mileage: "", fleetVehicle: "" });
 
   const filtered = customers.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -37,14 +37,14 @@ export default function CustomersPage() {
       totalSpend: 0,
       serviceHistory: [],
       notes: form.notes,
-      ...(businessType === "salon" && { hairType: form.hairType }),
-      ...(businessType === "petgroomer" && { petName: form.petName, petBreed: form.petBreed }),
-      ...(businessType === "spa" && { membershipStatus: form.membershipStatus }),
-      ...(businessType === "autoshop" && { vehicleMake: form.vehicleMake, vehicleModel: form.vehicleModel, mileage: Number(form.mileage) }),
+      ...(businessType === "salon" && { hairType: form.hairType, colorTreated: form.colorTreated }),
+      ...(businessType === "petgroomer" && { petName: form.petName, petBreed: form.petBreed, petSize: form.petSize, petAge: form.petAge }),
+      ...(businessType === "spa" && { membershipStatus: form.membershipStatus, pressurePreference: form.pressurePreference }),
+      ...(businessType === "autoshop" && { vehicleMake: form.vehicleMake, vehicleModel: form.vehicleModel, mileage: Number(form.mileage), fleetVehicle: form.fleetVehicle }),
     };
     addCustomer(c);
     setAdding(false);
-    setForm({ name: "", phone: "", email: "", area: "", preferredEmployee: "", notes: "", petName: "", petBreed: "", hairType: "", membershipStatus: "", vehicleMake: "", vehicleModel: "", mileage: "" });
+    setForm({ name: "", phone: "", email: "", area: "", preferredEmployee: "", notes: "", hairType: "", colorTreated: "", petName: "", petBreed: "", petSize: "", petAge: "", membershipStatus: "", pressurePreference: "", vehicleMake: "", vehicleModel: "", mileage: "", fleetVehicle: "" });
   }
 
   return (
@@ -125,9 +125,15 @@ export default function CustomersPage() {
                   <div><span className="text-slate-400">Area</span><div className="font-medium">{selected.area}</div></div>
                   <div><span className="text-slate-400">Preferred {cfg?.employeeRole}</span><div className="font-medium text-teal-600">{selected.preferredEmployee || "None"}</div></div>
                   {selected.hairType && <div><span className="text-slate-400">Hair Type</span><div className="font-medium">{selected.hairType}</div></div>}
+                  {selected.colorTreated && <div><span className="text-slate-400">Color Treated</span><div className="font-medium">{selected.colorTreated}</div></div>}
                   {selected.petName && <div><span className="text-slate-400">Pet</span><div className="font-medium">{selected.petName} ({selected.petBreed})</div></div>}
+                  {selected.petSize && <div><span className="text-slate-400">Pet Size</span><div className="font-medium">{selected.petSize}</div></div>}
+                  {selected.petAge && <div><span className="text-slate-400">Pet Age</span><div className="font-medium">{selected.petAge}</div></div>}
                   {selected.membershipStatus && <div><span className="text-slate-400">Membership</span><Badge variant="secondary">{selected.membershipStatus}</Badge></div>}
+                  {selected.pressurePreference && <div><span className="text-slate-400">Pressure Pref.</span><div className="font-medium">{selected.pressurePreference}</div></div>}
                   {selected.vehicleMake && <div><span className="text-slate-400">Vehicle</span><div className="font-medium">{selected.vehicleMake} {selected.vehicleModel}</div></div>}
+                  {selected.mileage && <div><span className="text-slate-400">Mileage</span><div className="font-medium">{selected.mileage?.toLocaleString()} mi</div></div>}
+                  {selected.fleetVehicle && <div><span className="text-slate-400">Fleet</span><Badge variant="secondary">Fleet Vehicle</Badge></div>}
                 </div>
                 {selected.notes && (
                   <div className="bg-amber-50 border border-amber-100 rounded-lg p-3 text-sm text-amber-800">
@@ -181,35 +187,71 @@ export default function CustomersPage() {
                 </select>
               </div>
 
-              {businessType === "salon" && (
-                <div>
-                  <Label className="text-xs text-slate-500 mb-1 block">Hair Type</Label>
-                  <Input value={form.hairType} onChange={(e) => setForm((f) => ({ ...f, hairType: e.target.value }))} className="text-sm border-slate-200" />
+              {/* Business-type specific fields */}
+              <div className="col-span-2 border-t border-slate-100 pt-3 mt-1">
+                <p className="text-xs font-semibold text-teal-600 uppercase tracking-wide mb-3">{cfg?.label} Details</p>
+                <div className="grid grid-cols-2 gap-3">
+                  {businessType === "salon" && (
+                    <>
+                      <div>
+                        <Label className="text-xs text-slate-500 mb-1 block">Hair Type</Label>
+                        <select value={form.hairType} onChange={(e) => setForm((f) => ({ ...f, hairType: e.target.value }))} className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm">
+                          <option value="">Select...</option>
+                          <option>Straight</option><option>Wavy</option><option>Curly</option><option>Coily</option><option>Fine</option><option>Thick</option>
+                        </select>
+                      </div>
+                      <div>
+                        <Label className="text-xs text-slate-500 mb-1 block">Color Treated?</Label>
+                        <select value={form.colorTreated} onChange={(e) => setForm((f) => ({ ...f, colorTreated: e.target.value }))} className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm">
+                          <option value="">Unknown</option><option>Yes — Single Process</option><option>Yes — Highlights</option><option>Yes — Balayage</option><option>No — Natural</option>
+                        </select>
+                      </div>
+                    </>
+                  )}
+                  {businessType === "petgroomer" && (
+                    <>
+                      <div><Label className="text-xs text-slate-500 mb-1 block">Pet Name</Label><Input value={form.petName} onChange={(e) => setForm((f) => ({ ...f, petName: e.target.value }))} className="text-sm border-slate-200" /></div>
+                      <div><Label className="text-xs text-slate-500 mb-1 block">Breed</Label><Input value={form.petBreed} onChange={(e) => setForm((f) => ({ ...f, petBreed: e.target.value }))} className="text-sm border-slate-200" /></div>
+                      <div>
+                        <Label className="text-xs text-slate-500 mb-1 block">Pet Size</Label>
+                        <select value={form.petSize} onChange={(e) => setForm((f) => ({ ...f, petSize: e.target.value }))} className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm">
+                          <option value="">Select...</option><option>Small (under 20 lbs)</option><option>Medium (20–50 lbs)</option><option>Large (50+ lbs)</option>
+                        </select>
+                      </div>
+                      <div><Label className="text-xs text-slate-500 mb-1 block">Pet Age</Label><Input placeholder="e.g. 3 years" value={form.petAge} onChange={(e) => setForm((f) => ({ ...f, petAge: e.target.value }))} className="text-sm border-slate-200" /></div>
+                    </>
+                  )}
+                  {businessType === "spa" && (
+                    <>
+                      <div>
+                        <Label className="text-xs text-slate-500 mb-1 block">Membership Status</Label>
+                        <select value={form.membershipStatus} onChange={(e) => setForm((f) => ({ ...f, membershipStatus: e.target.value }))} className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm">
+                          <option value="">Non-Member</option><option>Basic Member</option><option>Premium Member</option>
+                        </select>
+                      </div>
+                      <div>
+                        <Label className="text-xs text-slate-500 mb-1 block">Pressure Preference</Label>
+                        <select value={form.pressurePreference} onChange={(e) => setForm((f) => ({ ...f, pressurePreference: e.target.value }))} className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm">
+                          <option value="">No preference</option><option>Light</option><option>Medium</option><option>Firm</option><option>Deep Tissue</option>
+                        </select>
+                      </div>
+                    </>
+                  )}
+                  {businessType === "autoshop" && (
+                    <>
+                      <div><Label className="text-xs text-slate-500 mb-1 block">Vehicle Make</Label><Input value={form.vehicleMake} onChange={(e) => setForm((f) => ({ ...f, vehicleMake: e.target.value }))} className="text-sm border-slate-200" /></div>
+                      <div><Label className="text-xs text-slate-500 mb-1 block">Model & Year</Label><Input value={form.vehicleModel} onChange={(e) => setForm((f) => ({ ...f, vehicleModel: e.target.value }))} className="text-sm border-slate-200" /></div>
+                      <div><Label className="text-xs text-slate-500 mb-1 block">Mileage</Label><Input type="number" placeholder="e.g. 45000" value={form.mileage} onChange={(e) => setForm((f) => ({ ...f, mileage: e.target.value }))} className="text-sm border-slate-200" /></div>
+                      <div>
+                        <Label className="text-xs text-slate-500 mb-1 block">Fleet Vehicle?</Label>
+                        <select value={form.fleetVehicle} onChange={(e) => setForm((f) => ({ ...f, fleetVehicle: e.target.value }))} className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm">
+                          <option value="">No</option><option>Yes — invoice to company</option>
+                        </select>
+                      </div>
+                    </>
+                  )}
                 </div>
-              )}
-              {businessType === "petgroomer" && (
-                <>
-                  <div><Label className="text-xs text-slate-500 mb-1 block">Pet Name</Label><Input value={form.petName} onChange={(e) => setForm((f) => ({ ...f, petName: e.target.value }))} className="text-sm border-slate-200" /></div>
-                  <div><Label className="text-xs text-slate-500 mb-1 block">Breed</Label><Input value={form.petBreed} onChange={(e) => setForm((f) => ({ ...f, petBreed: e.target.value }))} className="text-sm border-slate-200" /></div>
-                </>
-              )}
-              {businessType === "spa" && (
-                <div>
-                  <Label className="text-xs text-slate-500 mb-1 block">Membership Status</Label>
-                  <select value={form.membershipStatus} onChange={(e) => setForm((f) => ({ ...f, membershipStatus: e.target.value }))} className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm">
-                    <option value="">Non-Member</option>
-                    <option value="Basic Member">Basic Member</option>
-                    <option value="Premium Member">Premium Member</option>
-                  </select>
-                </div>
-              )}
-              {businessType === "autoshop" && (
-                <>
-                  <div><Label className="text-xs text-slate-500 mb-1 block">Vehicle Make</Label><Input value={form.vehicleMake} onChange={(e) => setForm((f) => ({ ...f, vehicleMake: e.target.value }))} className="text-sm border-slate-200" /></div>
-                  <div><Label className="text-xs text-slate-500 mb-1 block">Model & Year</Label><Input value={form.vehicleModel} onChange={(e) => setForm((f) => ({ ...f, vehicleModel: e.target.value }))} className="text-sm border-slate-200" /></div>
-                  <div><Label className="text-xs text-slate-500 mb-1 block">Mileage</Label><Input type="number" value={form.mileage} onChange={(e) => setForm((f) => ({ ...f, mileage: e.target.value }))} className="text-sm border-slate-200" /></div>
-                </>
-              )}
+              </div>
 
               <div className="col-span-2">
                 <Label className="text-xs text-slate-500 mb-1 block">Notes</Label>

@@ -23,15 +23,20 @@ export interface Customer {
   notes: string;
   // salon
   hairType?: string;
+  colorTreated?: string;
   // pet groomer
   petName?: string;
   petBreed?: string;
+  petSize?: string;
+  petAge?: string;
   // spa
   membershipStatus?: string;
+  pressurePreference?: string;
   // auto shop
   vehicleMake?: string;
   vehicleModel?: string;
   mileage?: number;
+  fleetVehicle?: string;
 }
 
 export interface ServiceRecord {
