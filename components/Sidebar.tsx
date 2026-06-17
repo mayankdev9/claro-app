@@ -3,13 +3,20 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useClaroStore } from "@/lib/store";
 import { businessConfig } from "@/lib/data";
-import { LayoutDashboard, Users, UserCheck, Bot, Settings } from "lucide-react";
+import { LayoutDashboard, Users, UserCheck, Bot, Settings, CalendarDays, ClipboardList, Receipt, UserCog, Lock } from "lucide-react";
 
 const nav = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/customers", label: "Customers", icon: Users },
   { href: "/employees", label: "Team", icon: UserCheck },
   { href: "/ai", label: "AI Assistant", icon: Bot },
+];
+
+const comingSoon = [
+  { label: "Scheduling", icon: CalendarDays },
+  { label: "Job Orders", icon: ClipboardList },
+  { label: "Invoicing", icon: Receipt },
+  { label: "HR & Payroll", icon: UserCog },
 ];
 
 export default function Sidebar() {
@@ -31,7 +38,7 @@ export default function Sidebar() {
         )}
       </div>
 
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 px-3 py-4 flex flex-col gap-1">
         {nav.map(({ href, label, icon: Icon }) => {
           const active = pathname === href;
           return (
@@ -49,6 +56,23 @@ export default function Sidebar() {
             </Link>
           );
         })}
+
+        {/* Coming Soon modules */}
+        <div className="mt-4 mb-1 px-3">
+          <p className="text-xs font-semibold text-slate-300 uppercase tracking-widest">Coming Soon</p>
+        </div>
+        {comingSoon.map(({ label, icon: Icon }) => (
+          <div
+            key={label}
+            className="flex items-center justify-between px-3 py-2 rounded-lg text-sm text-slate-300 cursor-not-allowed select-none"
+          >
+            <div className="flex items-center gap-3">
+              <Icon size={16} />
+              {label}
+            </div>
+            <Lock size={11} className="text-slate-200" />
+          </div>
+        ))}
       </nav>
 
       <div className="px-3 py-4 border-t border-slate-100">

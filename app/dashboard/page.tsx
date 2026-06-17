@@ -3,7 +3,7 @@ import { useClaroStore } from "@/lib/store";
 import { businessConfig } from "@/lib/data";
 import Sidebar from "@/components/Sidebar";
 import { Card } from "@/components/ui/card";
-import { Users, TrendingUp, Star, Calendar, CalendarDays, ClipboardList, Receipt, UserCog, Lock } from "lucide-react";
+import { Users, TrendingUp, Star, Calendar } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
 export default function DashboardPage() {
@@ -102,7 +102,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Area breakdown + top customers */}
-        <div className="grid grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-2 gap-6">
           <Card className="p-5 bg-white border-slate-100">
             <h3 className="text-sm font-semibold text-slate-700 mb-4">Customers by Area</h3>
             <ResponsiveContainer width="100%" height={160}>
@@ -131,66 +131,6 @@ export default function DashboardPage() {
           </Card>
         </div>
 
-        {/* Add-on Modules */}
-        <div className="mb-2">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-base font-semibold text-slate-800">Add-on Modules</h2>
-              <p className="text-xs text-slate-400 mt-0.5">Expand Claro as your business grows · +$6.99/mo each</p>
-            </div>
-            <span className="text-xs bg-teal-50 text-teal-700 border border-teal-100 px-3 py-1 rounded-full font-medium">Growth Plan includes any 2</span>
-          </div>
-          <div className="grid grid-cols-4 gap-4">
-            {[
-              {
-                icon: CalendarDays,
-                name: "Scheduling",
-                desc: "Preference-aware appointment booking. Auto-suggests the customer's preferred employee at open slots.",
-                color: "text-teal-600",
-                bg: "bg-teal-50",
-              },
-              {
-                icon: ClipboardList,
-                name: "Job Orders",
-                desc: "Create and track service jobs end-to-end. Attach notes, parts, and status updates to each job.",
-                color: "text-blue-600",
-                bg: "bg-blue-50",
-              },
-              {
-                icon: Receipt,
-                name: "Invoicing",
-                desc: "Generate and send invoices tied to jobs and customers. Track payments and outstanding balances.",
-                color: "text-violet-600",
-                bg: "bg-violet-50",
-              },
-              {
-                icon: UserCog,
-                name: "HR & Payroll",
-                desc: "Manage shifts, time-off requests, and payroll tracking. Export clean reports for your accountant.",
-                color: "text-amber-600",
-                bg: "bg-amber-50",
-              },
-            ].map(({ icon: Icon, name, desc, color, bg }) => (
-              <Card key={name} className="p-5 bg-white border-slate-100 relative flex flex-col gap-3 opacity-90 hover:opacity-100 transition-opacity">
-                <div className="flex items-start justify-between">
-                  <div className={`w-9 h-9 rounded-lg ${bg} flex items-center justify-center`}>
-                    <Icon size={18} className={color} />
-                  </div>
-                  <span className="flex items-center gap-1 text-xs text-slate-400 bg-slate-50 border border-slate-100 px-2 py-0.5 rounded-full">
-                    <Lock size={10} /> Coming Soon
-                  </span>
-                </div>
-                <div>
-                  <div className="text-sm font-semibold text-slate-800 mb-1">{name}</div>
-                  <p className="text-xs text-slate-400 leading-relaxed">{desc}</p>
-                </div>
-                <button className="mt-auto text-xs font-medium text-teal-600 hover:text-teal-700 border border-teal-100 hover:border-teal-200 rounded-md py-1.5 transition-colors">
-                  Learn More →
-                </button>
-              </Card>
-            ))}
-          </div>
-        </div>
       </main>
     </div>
   );
